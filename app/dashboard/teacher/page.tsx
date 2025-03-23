@@ -4,30 +4,7 @@ import { redirect } from "next/navigation";
 export default async function TeacherDashboard() {
   const supabase = await createClient();
   
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
-  // Verify teacher role and subscription
-  const { data: profile } = await supabase
-    .from("user_profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("status")
-    .eq("user_id", user.id)
-    .single();
-
-  if (profile?.role !== "teacher" || subscription?.status !== "active") {
-    return redirect("/");
-  }
+  
 
   return (
     <div className="flex-1 w-full flex flex-col gap-4 items-center">

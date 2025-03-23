@@ -6,7 +6,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const signInWithGoogleAction = async () => {
-  const origin = headers().get("origin");
+  const header = await headers()
+  const origin = header.get("origin");
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -26,7 +27,7 @@ export const signInWithGoogleAction = async () => {
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
-  const role = formData.get("role")?.toString() || "student";
+  const role = formData.get("role")?.toString();
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
@@ -38,7 +39,7 @@ export const signUpAction = async (formData: FormData) => {
     );
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { error, data } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -84,7 +85,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/protected");
+  return redirect("/dashboard");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
