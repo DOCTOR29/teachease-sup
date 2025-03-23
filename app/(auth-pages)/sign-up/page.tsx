@@ -33,7 +33,7 @@ export default async function Signup(props: {
   }
 
   return (
-    <div className="flex flex-col min-w-64 max-w-64 mx-auto">
+    <div className=" flex flex-col    my-52">
       <form className="flex flex-col">
         <h1 className="text-2xl font-medium">Sign up</h1>
         <p className="text-sm text text-foreground">
