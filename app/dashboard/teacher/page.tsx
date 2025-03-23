@@ -1,18 +1,11 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-
 export default async function TeacherDashboard() {
-  const supabase = await createClient();
-  
-  
-
   return (
-    <div className="flex-1 w-full flex flex-col gap-4 items-center">
-      <div className="w-full max-w-4xl flex justify-between items-center">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Teacher Dashboard</h1>
       </div>
       
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <DashboardCard
           title="Lesson Plans"
           description="Create and manage your lesson plans"
@@ -55,7 +48,7 @@ function DashboardCard({
   return (
     <a
       href={href}
-      className="p-4 border rounded-lg hover:bg-accent transition-colors"
+      className="block p-6 border rounded-lg hover:bg-accent transition-colors"
     >
       <h2 className="text-lg font-semibold">{title}</h2>
       <p className="text-sm text-muted-foreground">{description}</p>
