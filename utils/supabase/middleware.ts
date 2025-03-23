@@ -43,15 +43,16 @@ export const updateSession = async (request: NextRequest) => {
     if (request.nextUrl.pathname.startsWith("/dashboard") && user.error) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
+ 
 
-    if (request.nextUrl.pathname === "/dashboard" && !user.error) {
+    if (request.nextUrl.pathname === "/dashboard" || request.nextUrl.pathname === "/sign-up" && !user.error ) {
       //user base login
       const userData = await user.data.user;
 
       const { data } = await supabase
         .from("user_profiles")
         .select("role")
-        .eq("id", userData.id)
+        .eq("id", userData!.id)
         .single();
 
       // const { data: subscription } = await supabase
