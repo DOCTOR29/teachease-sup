@@ -19,8 +19,10 @@ import {
 export default async function Signup(props: {
   searchParams: Promise<Message>;
 }) {
+ 
   const searchParams = await props.searchParams;
-  const role = searchParams.role || "student";
+  // console.log(searchParams.role)
+  const role = searchParams.role ;
 
   if ("message" in searchParams) {
     return (
