@@ -8,11 +8,20 @@ import { SmtpMessage } from "../smtp-message";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { signInWithGoogleAction } from "@/app/actions";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default async function Signup(props: {
   searchParams: Promise<Message>;
 }) {
   const searchParams = await props.searchParams;
+  const role = searchParams.role || "student";
+
   if ("message" in searchParams) {
     return (
       <div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
@@ -34,6 +43,19 @@ export default async function Signup(props: {
         <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
           <Label htmlFor="email">Email</Label>
           <Input name="email" placeholder="you@example.com" required />
+          
+          <Label htmlFor="role">Role</Label>
+          <Select name="role" defaultValue={role}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="student">Student</SelectItem>
+              <SelectItem value="teacher">Teacher</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
+            </SelectContent>
+          </Select>
+          
           <Label htmlFor="password">Password</Label>
           <Input
             type="password"

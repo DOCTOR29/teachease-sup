@@ -26,6 +26,7 @@ export const signInWithGoogleAction = async () => {
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const role = formData.get("role")?.toString() || "student";
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
@@ -48,6 +49,18 @@ export const signUpAction = async (formData: FormData) => {
   if (error) {
     console.error(error.code + " " + error.message);
     return encodedRedirect("error", "/sign-up", error.message);
+  }
+
+  // Create user profile with role
+  const { error: profileError } = await supabase
+    .from("user_profiles")
+    .insert({
+      id: data.user?.id,
+      role: role,
+    });
+
+  if (profileError) {
+    console.error(profileError);
   } else {
     return encodedRedirect(
       "success",
