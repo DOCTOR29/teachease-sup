@@ -7,6 +7,8 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
+import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@/utils/supabase/server";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -23,11 +25,21 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const user = await supabase.auth.getUser();
+  const userData = await user.data.user;
+
+  const { data } = await supabase
+  .from("user_profiles")
+  .select("role")
+  .eq("id", userData!.id)
+  .single(); 
+  
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
@@ -43,6 +55,8 @@ export default function RootLayout({
                 <div className="w-full max-w-7xl flex justify-between items-center p-3 px-5 text-sm">
                   <div className="flex gap-5 items-center font-semibold">
                     <Link href={"/"}>Teachease AI</Link>
+                    <div>{data?.role.replace(/\b\w/g, match => match.toUpperCase())} Dashboard</div>
+
                     <div className="flex items-center gap-2">
                       
                     </div>
