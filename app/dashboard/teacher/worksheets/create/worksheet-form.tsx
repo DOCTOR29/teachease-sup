@@ -28,18 +28,18 @@ interface Chapter {
   subject_id: string;
 }
 
-interface QuestionPaperFormProps {
+interface WorksheetFormProps {
   subjects: Subject[];
   chapters: Chapter[];
 }
 
-export function QuestionPaperForm({ subjects, chapters }: QuestionPaperFormProps) {
+export function WorksheetForm({ subjects, chapters }: WorksheetFormProps) {
   const router = useRouter();
 
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    title: "",
+  
     class: "",
     difficulty: "medium",
     chapterIds: [] as string[],
@@ -55,7 +55,7 @@ export function QuestionPaperForm({ subjects, chapters }: QuestionPaperFormProps
     setIsSubmitting(true);
 
     const formPayload = new FormData();
-    formPayload.append("title", formData.title);
+  
     formPayload.append("class", formData.class);
     formPayload.append("difficulty", formData.difficulty);
     formData.chapterIds.forEach((id) => formPayload.append("chapterIds", id));
@@ -76,17 +76,7 @@ export function QuestionPaperForm({ subjects, chapters }: QuestionPaperFormProps
         <h2 className="text-lg font-semibold mb-4">Question Paper Info</h2>
 
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-            />
-          </div>
+          
 
           <div>
             <Label htmlFor="class">Class</Label>

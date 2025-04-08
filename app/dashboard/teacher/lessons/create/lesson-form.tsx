@@ -13,8 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { MultiSelect } from "@/components/custom/multi-select"; // Assumes you have a custom MultiSelect component
+import { Upload } from "lucide-react";
 
 interface Subject {
   id: string;
@@ -33,213 +34,99 @@ interface LessonFormProps {
 }
 
 export function LessonForm({ subjects, chapters }: LessonFormProps) {
-  const [selectedSubject, setSelectedSubject] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const [selectedSubject, setSelectedSubject] = useState<string>("");
+  const [selectedChapters, setSelectedChapters] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    content: "",
-    chapterId: "",
-    objectives: "",
-    materials: "",
-    duration: 60,
-    activities: "",
-    assessment: "",
-    homework: "",
+    className: "",
+    blueprintFile: null as File | null,
   });
 
   const filteredChapters = chapters.filter(
     (chapter) => chapter.subject_id === selectedSubject
   );
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData((prev) => ({ ...prev, blueprintFile: file }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast.success("Lesson plan created successfully");
+
+    // Simulate form submission
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    toast.success("Lesson blueprint submitted successfully");
     router.push("/dashboard/teacher/lessons");
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="title">Lesson Title</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-            />
-          </div>
+      <Card className="p-6 space-y-4">
+        <h2 className="text-lg font-semibold">Upload Lesson Blueprint</h2>
 
-          <div>
-            <Label htmlFor="subject">Subject</Label>
-            <Select
-              value={selectedSubject}
-              onValueChange={setSelectedSubject}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select subject" />
-              </SelectTrigger>
-              <SelectContent>
-                {subjects.map((subject) => (
-                  <SelectItem key={subject.id} value={subject.id}>
-                    {subject.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div>
+          <Label htmlFor="className">Class</Label>
+          <Input
+            id="className"
+            placeholder="Enter class name"
+            value={formData.className}
+            onChange={(e) =>
+              setFormData({ ...formData, className: e.target.value })
+            }
+            required
+          />
+        </div>
 
-          <div>
-            <Label htmlFor="chapter">Chapter</Label>
-            <Select
-              value={formData.chapterId}
-              onValueChange={(value) =>
-                setFormData({ ...formData, chapterId: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select chapter" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredChapters.map((chapter) => (
-                  <SelectItem key={chapter.id} value={chapter.id}>
-                    {chapter.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div>
+          <Label htmlFor="subject">Subject</Label>
+          <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select subject" />
+            </SelectTrigger>
+            <SelectContent>
+              {subjects.map((subject) => (
+                <SelectItem key={subject.id} value={subject.id}>
+                  {subject.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-          <div>
-            <Label htmlFor="duration">Duration (minutes)</Label>
-            <Input
-              id="duration"
-              type="number"
-              min="1"
-              value={formData.duration}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  duration: parseInt(e.target.value),
-                })
-              }
-              required
-            />
-          </div>
+        <div>
+          <Label htmlFor="chapters">Chapters</Label>
+          <MultiSelect
+            options={filteredChapters.map((chapter) => ({
+              label: chapter.name,
+              value: chapter.id,
+            }))}
+            selected={selectedChapters}
+            onChange={setSelectedChapters}
+            placeholder="Select one or more chapters"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="blueprint">Upload Blueprint (PDF or Image)</Label>
+          <Input
+            id="blueprint"
+            type="file"
+            accept="application/pdf,image/*"
+            onChange={handleFileChange}
+            required
+          />
+        </div>
+
+        <div className="flex justify-end">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Uploading..." : "Submit Blueprint"}
+          </Button>
         </div>
       </Card>
-
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Lesson Details</h2>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="objectives">Learning Objectives</Label>
-            <Textarea
-              id="objectives"
-              value={formData.objectives}
-              onChange={(e) =>
-                setFormData({ ...formData, objectives: e.target.value })
-              }
-              placeholder="What will students learn?"
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="materials">Required Materials</Label>
-            <Textarea
-              id="materials"
-              value={formData.materials}
-              onChange={(e) =>
-                setFormData({ ...formData, materials: e.target.value })
-              }
-              placeholder="List all required materials"
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="content">Lesson Content</Label>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
-              }
-              placeholder="Main lesson content and teaching points"
-              className="min-h-[200px]"
-              required
-            />
-          </div>
-        </div>
-      </Card>
-
-      <Card className="p-6">
-        <h2 className="text-lg font-semibold mb-4">Activities & Assessment</h2>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="activities">Class Activities</Label>
-            <Textarea
-              id="activities"
-              value={formData.activities}
-              onChange={(e) =>
-                setFormData({ ...formData, activities: e.target.value })
-              }
-              placeholder="Describe class activities and exercises"
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="assessment">Assessment Method</Label>
-            <Textarea
-              id="assessment"
-              value={formData.assessment}
-              onChange={(e) =>
-                setFormData({ ...formData, assessment: e.target.value })
-              }
-              placeholder="How will you assess student understanding?"
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="homework">Homework/Assignment</Label>
-            <Textarea
-              id="homework"
-              value={formData.homework}
-              onChange={(e) =>
-                setFormData({ ...formData, homework: e.target.value })
-              }
-              placeholder="Optional homework or follow-up assignment"
-            />
-          </div>
-        </div>
-      </Card>
-
-      <div className="flex justify-end gap-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push("/dashboard/teacher/lessons")}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating..." : "Create Lesson Plan"}
-        </Button>
-      </div>
     </form>
   );
 }

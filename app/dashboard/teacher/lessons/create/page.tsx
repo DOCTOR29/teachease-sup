@@ -5,12 +5,14 @@ export default function CreateLesson() {
     { id: "1", name: "Physics" },
     { id: "2", name: "Chemistry" },
     { id: "3", name: "Biology" },
+    { id: "4", name: "Mathematics" },
   ];
 
   const mockChapters = [
     { id: "1", name: "Forces and Motion", subject_id: "1" },
     { id: "2", name: "Chemical Bonding", subject_id: "2" },
     { id: "3", name: "Cell Biology", subject_id: "3" },
+    { id: "4", name: "Trigonometry", subject_id: "3" },
   ];
 
   return (

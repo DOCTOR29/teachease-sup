@@ -1,6 +1,7 @@
-import { QuestionPaperForm } from "./question-paper-form";
+import { WorksheetForm } from "./worksheet-form";
 
-export default function CreateQuestionPaper() {
+
+export default function CreateWorksheetPaper() {
   const mockSubjects = [
     { id: "1", name: "Physics" },
     { id: "2", name: "Chemistry" },
@@ -18,10 +19,10 @@ export default function CreateQuestionPaper() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Create Question Paper</h1>
-        <p className="text-muted-foreground">Design a comprehensive question paper</p>
+        <h1 className="text-2xl font-bold">Create Worsheet Paper</h1>
+        <p className="text-muted-foreground">Design a comprehensive worksheet </p>
       </div>
-      <QuestionPaperForm subjects={mockSubjects} chapters={mockChapters} />
+      <WorksheetForm subjects={mockSubjects} chapters={mockChapters} />
     </div>
   );
 }

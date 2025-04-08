@@ -9,6 +9,7 @@ import Link from "next/link";
 import "./globals.css";
 import { createServerClient } from "@supabase/ssr";
 import { createClient } from "@/utils/supabase/server";
+import { Toaster } from "sonner";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -55,7 +56,7 @@ export default async function RootLayout({
                 <div className="w-full max-w-7xl flex justify-between items-center p-3 px-5 text-sm">
                   <div className="flex gap-5 items-center font-semibold">
                     <Link href={"/"}>Teachease AI</Link>
-                    <div>{data?.role.replace(/\b\w/g, match => match.toUpperCase())} Dashboard</div>
+                    <div>{data?.role.replace(/\b\w/g, (match: string) => match.toUpperCase())} Dashboard</div>
 
                     <div className="flex items-center gap-2">
                       
@@ -67,6 +68,7 @@ export default async function RootLayout({
               <div className="flex flex-col gap-20 w-full ">
                 {children}
               </div>
+              <Toaster position="bottom-right" richColors /> {/* ✅ Toaster Component */}
 
               <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 ">
                <p>Change theme</p>

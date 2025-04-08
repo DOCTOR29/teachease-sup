@@ -27,12 +27,12 @@ interface Chapter {
   subject_id: string;
 }
 
-interface QuizFormProps {
+interface AssignmentFormProps {
   subjects: Subject[];
   chapters: Chapter[];
 }
 
-export function QuizForm({ subjects, chapters }: QuizFormProps) {
+export function AssignmentForm({ subjects, chapters }: AssignmentFormProps) {
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
